@@ -1,0 +1,14 @@
+{
+  "name": "EarthPulse Live API",
+  "description": "Read-only normalized natural-event data from USGS and NASA EONET.",
+  "version": "0.1.0",
+  "openapi": "/openapi.json",
+  "authentication": "/auth.md",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard",
+      "purpose": "Retrieve filtered events, summary metrics, activity timeline, and source health."
+    }
+  ]
+}

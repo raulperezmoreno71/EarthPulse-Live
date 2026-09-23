@@ -7,7 +7,7 @@
 - **Author / Company:** Raúl Pérez Moreno
 - **License:** MIT
 - **Documentation Language:** Español
-- **Version Control:** Git (pendiente de inicialización con aprobación explícita)
+- **Version Control:** Git, rama `main`
 - **Languages:** Java 21, TypeScript, HTML, CSS, SQL
 - **Technologies / Stack:** Spring Boot 4.1, React 19, Vite, PostgreSQL, Flyway, React Query, Zod, Leaflet y Recharts
 - **Agent Readiness (Web):** Yes

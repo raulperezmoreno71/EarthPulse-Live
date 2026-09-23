@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Machine-readable product and API context: /llms.txt

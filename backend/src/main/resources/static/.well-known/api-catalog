@@ -1,0 +1,7 @@
+{
+  "name": "EarthPulse Live API",
+  "version": "0.1.0",
+  "openapi": "/openapi.json",
+  "authentication": "/auth.md",
+  "endpoints": [{ "method": "GET", "path": "/api/v1/dashboard" }]
+}

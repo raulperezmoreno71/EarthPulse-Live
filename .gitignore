@@ -26,6 +26,7 @@ frontend/.vite/
 # Runtime data
 .data/
 postgres-data/
+.runtime/
 
 # Temporary files
 *.tmp

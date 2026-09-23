@@ -1,0 +1,15 @@
+# EarthPulse Live
+
+EarthPulse Live is a read-only geospatial dashboard for public natural-event data from USGS and NASA EONET.
+
+## Canonical resources
+
+- Dashboard API: `/api/v1/dashboard`
+- OpenAPI contract: `/openapi.json`
+- API catalog: `/.well-known/api-catalog`
+- Agent plugin: `/.well-known/agent-plugin/plugin.json`
+- Authentication: `/auth.md`
+
+## Safety and provenance
+
+Data is informational and must not replace official emergency alerts. Every event includes a source, external identifier, occurrence time, and—when supplied by the provider—a source URL. The API is read-only and requires no authentication.

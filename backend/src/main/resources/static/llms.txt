@@ -1,0 +1,10 @@
+# EarthPulse Live
+
+Read-only natural-event API backed by public USGS and NASA EONET feeds.
+
+- Dashboard API: `/api/v1/dashboard`
+- OpenAPI contract: `/openapi.json`
+- API catalog: `/.well-known/api-catalog`
+- Authentication: `/auth.md`
+
+The data is informational and must not replace official emergency alerts.

@@ -1,0 +1,65 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EarthPulse Live API",
+    "version": "0.1.0",
+    "description": "Read-only dashboard for normalized public natural-event data."
+  },
+  "servers": [{ "url": "/" }],
+  "paths": {
+    "/api/v1/dashboard": {
+      "get": {
+        "operationId": "getDashboard",
+        "summary": "Get natural events and dashboard aggregates",
+        "parameters": [
+          { "name": "source", "in": "query", "schema": { "type": "string", "enum": ["USGS", "NASA_EONET"] } },
+          { "name": "category", "in": "query", "schema": { "type": "string", "enum": ["EARTHQUAKE", "WILDFIRE", "SEVERE_STORM", "VOLCANO", "FLOOD", "ICEBERG", "OTHER"] } },
+          { "name": "severity", "in": "query", "schema": { "type": "string", "enum": ["LOW", "MODERATE", "HIGH", "CRITICAL"] } },
+          { "name": "hours", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 8760, "default": 2160 } },
+          { "name": "query", "in": "query", "schema": { "type": "string", "maxLength": 120 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 2000, "default": 1200 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard snapshot",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Dashboard" } } }
+          },
+          "400": { "description": "Invalid filter" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dashboard": {
+        "type": "object",
+        "required": ["generatedAt", "summary", "events", "timeline", "sources"],
+        "properties": {
+          "generatedAt": { "type": "string", "format": "date-time" },
+          "summary": { "type": "object", "additionalProperties": true },
+          "events": { "type": "array", "items": { "$ref": "#/components/schemas/NaturalEvent" } },
+          "timeline": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+          "sources": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "NaturalEvent": {
+        "type": "object",
+        "required": ["id", "source", "externalId", "title", "category", "severity", "status", "occurredAt", "latitude", "longitude"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "source": { "type": "string", "enum": ["USGS", "NASA_EONET"] },
+          "externalId": { "type": "string" },
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "severity": { "type": "string" },
+          "status": { "type": "string" },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "latitude": { "type": "number" },
+          "longitude": { "type": "number" },
+          "magnitude": { "type": ["number", "null"] },
+          "sourceUrl": { "type": ["string", "null"], "format": "uri" }
+        }
+      }
+    }
+  }
+}

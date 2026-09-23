@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "earthpulse-live",
+  "version": "0.1.0",
+  "description": "Read-only access to normalized USGS and NASA EONET natural-event data with provenance.",
+  "author": { "name": "Raúl Pérez Moreno" },
+  "license": "MIT",
+  "keywords": ["natural-events", "geospatial", "usgs", "nasa", "open-data"],
+  "extensions": {
+    "dev.earthpulse.api": {
+      "openapi": "/openapi.json",
+      "authentication": "/auth.md",
+      "readOnly": true
+    }
+  }
+}
