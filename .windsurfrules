@@ -1,0 +1,3 @@
+This project uses the dbv-specs-ops Spec-Driven Development workflow.
+
+Read and follow `dbv-specs-ops/docs/MASTER_PROMPT.md` before proposing code or a technical plan. Load project configuration, specifications, architecture, memory, and task state from the `dbv-specs-ops/` directory. Keep application source in the project root.
