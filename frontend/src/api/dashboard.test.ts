@@ -44,4 +44,16 @@ describe('dashboardSchema', () => {
     invalidPayload.events[0]!.latitude = '37.123' as unknown as number
     expect(dashboardSchema.safeParse(invalidPayload).success).toBe(false)
   })
+
+  it('rejects out-of-range coordinates and strips unsafe source links', () => {
+    const badCoordinates = structuredClone(validPayload)
+    badCoordinates.events[0]!.latitude = 120
+    expect(dashboardSchema.safeParse(badCoordinates).success).toBe(false)
+
+    const unsafeLink = structuredClone(validPayload)
+    unsafeLink.events[0]!.sourceUrl = 'javascript:alert(1)'
+    const parsed = dashboardSchema.safeParse(unsafeLink)
+    expect(parsed.success).toBe(true)
+    if (parsed.success) expect(parsed.data.events[0]?.sourceUrl).toBeNull()
+  })
 })

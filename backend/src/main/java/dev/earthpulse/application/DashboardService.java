@@ -82,6 +82,12 @@ public class DashboardService {
             }
         }
 
+        LocalDate firstDate = fromTime.atZone(ZoneOffset.UTC).toLocalDate();
+        LocalDate lastDate = now.atZone(ZoneOffset.UTC).toLocalDate();
+        for (LocalDate date = firstDate; !date.isAfter(lastDate); date = date.plusDays(1)) {
+            timelineCounts.putIfAbsent(date, 0L);
+        }
+
         List<DashboardResponse.TimelinePoint> timeline = timelineCounts.entrySet().stream()
                 .map(entry -> new DashboardResponse.TimelinePoint(entry.getKey(), entry.getValue()))
                 .toList();

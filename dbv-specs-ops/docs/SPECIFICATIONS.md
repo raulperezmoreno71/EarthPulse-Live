@@ -1,8 +1,8 @@
 # 📋 Especificaciones: EarthPulse Live
 
 > **Fase:** `/spec`
-> **Estado:** Validado por intención del usuario; pendiente de aprobación del plan técnico
-> **Última revisión:** 2026-09-23
+> **Estado:** En evolución; ampliación visual y cartográfica aprobada por el autor
+> **Última revisión:** 2026-10-08
 
 ## 1. Contexto y objetivos
 
@@ -20,16 +20,19 @@
 
 ## 3. Funcionalidades principales
 
-- [ ] **Mapa mundial interactivo:** representar eventos normalizados con marcadores agrupados, color por categoría y escala por severidad.
-- [ ] **Resumen operativo:** mostrar total visible, eventos críticos, actividad de 24 horas, fuente y última sincronización.
-- [ ] **Filtros combinables:** categoría, fuente, rango temporal, magnitud mínima y búsqueda textual.
-- [ ] **Detalle contextual:** abrir un panel con todos los datos disponibles, explicación de severidad y vínculo verificable a la fuente.
-- [ ] **Actividad temporal:** visualizar la distribución por día y por categoría mediante gráficas accesibles.
-- [ ] **Ingesta real:** sincronizar USGS GeoJSON y NASA EONET v3, validar la respuesta, normalizarla y realizar upsert idempotente.
-- [ ] **Persistencia:** almacenar eventos y ejecuciones de sincronización en PostgreSQL mediante migraciones versionadas.
-- [ ] **Estados robustos:** comunicar carga, ausencia de datos, fuente degradada, datos en caché y errores parciales sin dejar la interfaz inutilizable.
-- [ ] **Actualización periódica:** refrescar datos desde el backend y actualizar el panel sin recargar la página.
-- [ ] **Diseño responsive y accesible:** experiencia cuidada en escritorio, tableta y móvil, con teclado, contraste AA y reducción de movimiento.
+- [x] **Mapa mundial interactivo:** representar eventos normalizados con marcadores agrupados y color por prioridad visual.
+- [x] **Resumen operativo:** mostrar total visible, prioridad alta, actividad de 24 horas, fuentes y última actualización.
+- [x] **Filtros combinables:** categoría, fuente, rango temporal, prioridad visual y búsqueda textual.
+- [x] **Detalle contextual:** abrir un panel con datos disponibles, explicación de prioridad y vínculo verificable a la fuente.
+- [x] **Actividad temporal:** visualizar la distribución por día y por categoría con un resumen legible para lectores de pantalla.
+- [x] **Ingesta real:** sincronizar USGS GeoJSON y NASA EONET v3, validar la respuesta, normalizarla y realizar upsert idempotente.
+- [x] **Persistencia:** almacenar eventos y ejecuciones de sincronización en PostgreSQL mediante migraciones versionadas.
+- [x] **Estados robustos:** comunicar carga, ausencia de datos, fuente degradada y errores parciales sin dejar la interfaz inutilizable.
+- [x] **Actualización periódica:** refrescar datos desde el backend y actualizar el panel sin recargar la página.
+- [ ] **Diseño responsive y accesible:** experiencia cuidada en escritorio, tableta y móvil, con teclado, contraste AA y reducción de movimiento; pendiente auditoría visual y de contraste en navegador.
+- [x] **Cartografía sin clave:** el mapa mundial y los marcadores deben mostrarse sin un proveedor de teselas, conexión cartográfica ni pagos.
+- [x] **Detalle cartográfico optativo:** el usuario puede activar calles de OpenStreetMap para explorar una región, sin comprometer el atlas local si las teselas fallan.
+- [x] **Lectura mejorada:** indicadores de frescura, distribución por categorías, búsqueda cómoda y ordenación del feed con cifras siempre derivadas de eventos reales.
 
 ## 4. Propuesta de solución técnica
 
@@ -42,11 +45,11 @@
 
 ### 4.1. Agent Readiness
 
-- [ ] Publicar `robots.txt`, `llms.txt` y `auth.md`.
-- [ ] Publicar catálogo de API y metadatos aplicables bajo `.well-known/`.
-- [ ] Incluir un Agent Plugin mínimo y válido que describa la API pública de lectura.
-- [ ] Añadir cabeceras `Link` desde Spring Boot y documentación Markdown de endpoints.
-- [ ] No anunciar OAuth ni firma HTTP como disponibles mientras no exista autenticación real.
+- [x] Publicar `robots.txt`, `llms.txt` y `auth.md`.
+- [x] Publicar catálogo de API y metadatos aplicables bajo `.well-known/`.
+- [x] Incluir un Agent Plugin mínimo y válido que describa la API pública de lectura.
+- [x] Añadir cabeceras `Link` desde Spring Boot y documentación Markdown de endpoints.
+- [x] No anunciar OAuth ni firma HTTP como disponibles mientras no exista autenticación real.
 
 ## 5. Fuera de alcance de la primera entrega
 
@@ -65,6 +68,7 @@
 - **Sobrecarga visual:** clustering, filtros progresivos, jerarquía clara y panel de detalle bajo demanda.
 - **Interpretación incorrecta:** etiquetar el producto como informativo, enlazar la fuente y no presentar una puntuación propia como alerta oficial.
 - **Dependencias o secretos:** paquetes verificados, versiones fijadas, variables de entorno y escaneo durante `/code-simplify`.
+- **Cambios en proveedores de mapas:** atlas local versionado a partir de Natural Earth; la capa remota de calles es optativa y nunca necesaria para mostrar eventos.
 
 ## 7. Decisiones resueltas
 
@@ -83,6 +87,7 @@
 - Cada evento muestra fuente y enlace original cuando estén disponibles.
 - Frontend y backend cuentan con pruebas automáticas relevantes y builds reproducibles.
 - No existen secretos incluidos, dependencias ficticias ni errores críticos de accesibilidad conocidos.
+- El atlas y los eventos funcionan sin API key y sin teselas remotas; ningún error de la capa opcional tapa el mapa.
 
 ## 9. Evals no deterministas
 

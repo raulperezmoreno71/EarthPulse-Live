@@ -4,7 +4,7 @@
 // Licensed under the MIT License. See LICENSE for details.
 // Built with dbv-specs-ops · https://github.com/davidbuenov/dbv-specs-ops
 // =============================================================================
-import { RotateCcw, Search, SlidersHorizontal } from 'lucide-react'
+import { RotateCcw, Search, SlidersHorizontal, Sparkles } from 'lucide-react'
 import type { DashboardFilters, EventCategory, EventSource, Severity } from '../api/dashboard'
 import { categoryLabels, severityLabels, sourceLabels } from '../utils/format'
 
@@ -16,7 +16,8 @@ interface FilterPanelProps {
 
 const categories: EventCategory[] = ['EARTHQUAKE', 'WILDFIRE', 'SEVERE_STORM', 'VOLCANO', 'FLOOD', 'ICEBERG', 'OTHER']
 const sources: EventSource[] = ['USGS', 'NASA_EONET']
-const severities: Severity[] = ['MODERATE', 'HIGH', 'CRITICAL']
+const severities: Severity[] = ['LOW', 'MODERATE', 'HIGH', 'CRITICAL']
+const timeWindows = [{ label: '24 h', hours: 24 }, { label: '7 días', hours: 168 }, { label: '30 días', hours: 720 }, { label: '90 días', hours: 2160 }]
 
 export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
   const reset = () => onChange({ source: null, category: null, severity: null, hours: 2160, query: '' })
@@ -29,6 +30,7 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
           <RotateCcw size={15} />
         </button>
       </div>
+      <p className="filter-intro">Ajusta el radar a lo que te interesa.</p>
 
       <label className="search-field">
         <Search size={16} aria-hidden="true" />
@@ -37,6 +39,7 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
           type="search"
           value={filters.query}
           placeholder="Buscar ubicación…"
+          maxLength={120}
           onChange={(event) => onChange({ ...filters, query: event.target.value })}
         />
       </label>
@@ -44,9 +47,9 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
       <fieldset>
         <legend>Fuente</legend>
         <div className="segmented-control">
-          <button type="button" className={filters.source === null ? 'active' : ''} onClick={() => onChange({ ...filters, source: null })}>Todas</button>
+          <button type="button" aria-pressed={filters.source === null} className={filters.source === null ? 'active' : ''} onClick={() => onChange({ ...filters, source: null })}>Todas</button>
           {sources.map((source) => (
-            <button type="button" className={filters.source === source ? 'active' : ''} onClick={() => onChange({ ...filters, source })} key={source}>
+            <button type="button" aria-pressed={filters.source === source} className={filters.source === source ? 'active' : ''} onClick={() => onChange({ ...filters, source })} key={source}>
               {sourceLabels[source]}
             </button>
           ))}
@@ -59,6 +62,7 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
           {categories.map((category) => (
             <button
               type="button"
+              aria-pressed={filters.category === category}
               className={`category-filter category-${category.toLowerCase()} ${filters.category === category ? 'active' : ''}`}
               onClick={() => onChange({ ...filters, category: filters.category === category ? null : category })}
               key={category}
@@ -73,12 +77,11 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
 
       <fieldset>
         <legend>Ventana temporal</legend>
-        <select value={filters.hours} onChange={(event) => onChange({ ...filters, hours: Number(event.target.value) })}>
-          <option value={24}>Últimas 24 horas</option>
-          <option value={168}>Últimos 7 días</option>
-          <option value={720}>Últimos 30 días</option>
-          <option value={2160}>Últimos 90 días</option>
-        </select>
+        <div className="time-grid">
+          {timeWindows.map((window) => (
+            <button type="button" key={window.hours} aria-pressed={filters.hours === window.hours} className={filters.hours === window.hours ? 'active' : ''} onClick={() => onChange({ ...filters, hours: window.hours })}>{window.label}</button>
+          ))}
+        </div>
       </fieldset>
 
       <fieldset>
@@ -87,6 +90,7 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
           {severities.map((severity) => (
             <button
               type="button"
+              aria-pressed={filters.severity === severity}
               className={`severity-chip severity-${severity.toLowerCase()} ${filters.severity === severity ? 'active' : ''}`}
               onClick={() => onChange({ ...filters, severity: filters.severity === severity ? null : severity })}
               key={severity}
@@ -96,6 +100,7 @@ export function FilterPanel({ filters, counts, onChange }: FilterPanelProps) {
           ))}
         </div>
       </fieldset>
+      <div className="filter-footnote"><Sparkles size={15} /><span>La prioridad es una lectura visual orientativa, no una alerta oficial.</span></div>
     </aside>
   )
 }

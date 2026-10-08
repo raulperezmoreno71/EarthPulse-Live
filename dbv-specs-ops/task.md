@@ -29,9 +29,20 @@
 - Evaluar PostGIS solo si se incorporan consultas espaciales avanzadas; no añadirlo por anticipación.
 - Considerar bloqueo distribuido de tareas si se despliega más de una instancia.
 
+## Ciclo activo — mejora visual y mapa sin clave (2026-10-08)
+
+- [x] Confirmar causa del error cartográfico y revisar especificación y arquitectura.
+- [x] Integrar atlas local Natural Earth y retirar CARTO.
+- [x] Añadir capa opcional de calles, controles de mapa y estados robustos.
+- [x] Mejorar composición visual, legibilidad, frescura, filtros y exploración de eventos.
+- [x] Auditar fronteras backend y seguridad de enlaces de origen.
+- [x] Ejecutar pruebas, build, auditoría de dependencias y comprobación HTTP con datos reales.
+- [ ] Completar inspección visual interactiva en escritorio y móvil cuando haya navegador conectado.
+- [x] Actualizar README de uso, memoria, changelog y walkthrough.
+
 ## Context Snapshot
 
-> **Última actualización:** 2026-09-23
-> **Punto exacto:** ciclo Spec → Ship completado en `v0.1.0`; arranque y parada verificados de extremo a extremo.
-> **Pendiente:** ninguno para la entrega inicial.
-> **Próximo paso:** demostración local o publicación en un repositorio remoto cuando el autor lo decida.
+> **Última actualización:** 2026-10-08
+> **Punto exacto:** atlas local, rediseño, mejoras de exploración, seguridad de feeds y README implementados; comprobaciones automáticas y HTTP correctas.
+> **Pendiente:** inspección visual interactiva en navegador y decisión de versión para la siguiente entrega.
+> **Próximo paso:** revisar en escritorio/móvil, cerrar los retoques derivados y seleccionar versión (recomendación: minor).

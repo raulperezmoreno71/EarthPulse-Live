@@ -4,9 +4,10 @@
 // Licensed under the MIT License. See LICENSE for details.
 // Built with dbv-specs-ops · https://github.com/davidbuenov/dbv-specs-ops
 // =============================================================================
-import { ExternalLink, MapPin, X } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { Clock3, ExternalLink, MapPin, X } from 'lucide-react'
 import type { NaturalEvent } from '../api/dashboard'
-import { absoluteTime, categoryLabels, severityLabels, sourceLabels } from '../utils/format'
+import { absoluteTime, categoryLabels, relativeTime, severityLabels, sourceLabels } from '../utils/format'
 
 interface EventDetailsProps {
   event: NaturalEvent | null
@@ -14,15 +15,28 @@ interface EventDetailsProps {
 }
 
 export function EventDetails({ event, onClose }: EventDetailsProps) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const eventId = event?.id
+  useEffect(() => {
+    if (eventId === undefined) return
+    closeRef.current?.focus()
+    const closeOnEscape = (keyboardEvent: KeyboardEvent) => {
+      if (keyboardEvent.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', closeOnEscape)
+    return () => { document.removeEventListener('keydown', closeOnEscape) }
+  }, [eventId, onClose])
+
   let content = null
   if (event !== null) content = (
-    <aside className="detail-card" aria-label={`Detalle de ${event.title}`}>
-      <button className="detail-close" type="button" onClick={onClose} aria-label="Cerrar detalle"><X size={17} /></button>
+    <aside className="detail-card" role="dialog" aria-modal="false" aria-labelledby="event-detail-title">
+      <button ref={closeRef} className="detail-close" type="button" onClick={onClose} aria-label="Cerrar detalle"><X size={18} /></button>
       <div className="detail-kicker">
         <span className={`event-signal severity-${event.severity.toLowerCase()}`} aria-hidden="true" />
         {categoryLabels[event.category]} · {sourceLabels[event.source]}
       </div>
-      <h2>{event.title}</h2>
+      <h2 id="event-detail-title">{event.title}</h2>
+      <p className="detail-description"><Clock3 size={15} /> Registrado {relativeTime(event.occurredAt)}</p>
       <div className="priority-block">
         <span>Prioridad visual</span>
         <strong>{severityLabels[event.severity]}</strong>
@@ -30,6 +44,7 @@ export function EventDetails({ event, onClose }: EventDetailsProps) {
       </div>
       <dl className="detail-grid">
         <div><dt>Detectado</dt><dd>{absoluteTime(event.occurredAt)}</dd></div>
+        {event.updatedAt != null ? <div><dt>Fuente actualizada</dt><dd>{absoluteTime(event.updatedAt)}</dd></div> : null}
         <div><dt>Estado</dt><dd>{event.status === 'OPEN' ? 'Activo' : event.status === 'CLOSED' ? 'Cerrado' : 'Informativo'}</dd></div>
         <div><dt>Latitud</dt><dd>{event.latitude.toFixed(4)}°</dd></div>
         <div><dt>Longitud</dt><dd>{event.longitude.toFixed(4)}°</dd></div>

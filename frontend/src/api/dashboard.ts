@@ -27,12 +27,12 @@ const eventSchema = z.object({
   status: z.enum(['OPEN', 'CLOSED', 'UNKNOWN']),
   occurredAt: z.string().datetime(),
   updatedAt: z.string().datetime().nullable().optional(),
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().finite().min(-90).max(90),
+  longitude: z.number().finite().min(-180).max(180),
   magnitudeValue: z.number().nullable().optional(),
   magnitudeUnit: z.string().nullable().optional(),
   severity: severitySchema,
-  sourceUrl: z.string().url().nullable().optional(),
+  sourceUrl: z.url().refine((value) => /^https?:\/\//i.test(value)).nullable().optional().catch(null),
 })
 
 const sourceStateSchema = z.object({

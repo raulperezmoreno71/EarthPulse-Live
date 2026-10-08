@@ -76,7 +76,7 @@ public class EonetFeedClient implements FeedClient {
         String title = properties.path("title").asText("");
         String date = properties.path("date").asText("");
         boolean valid = !externalId.isBlank() && !title.isBlank() && !date.isBlank()
-                && coordinates.isArray() && coordinates.size() >= 2;
+                && FeedValidation.validCoordinates(coordinates);
 
         Optional<NormalizedEvent> parsed = Optional.empty();
         if (valid) {
@@ -166,6 +166,6 @@ public class EonetFeedClient implements FeedClient {
                 sourceUrl = candidate;
             }
         }
-        return sourceUrl;
+        return FeedValidation.safeSourceUrl(sourceUrl);
     }
 }

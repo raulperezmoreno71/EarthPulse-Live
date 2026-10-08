@@ -4,7 +4,28 @@ Todos los cambios relevantes de EarthPulse Live se documentan aquí siguiendo ve
 
 ## [Sin publicar]
 
-Sin cambios todavía.
+### Added
+
+- Atlas mundial vectorial local y detalle cartográfico opcional sin clave.
+- Nueva composición responsive con hero editorial, métricas, distribución de fenómenos, leyenda y paneles rediseñados.
+- Ordenación de eventos por fecha o prioridad, carga incremental, filtro de prioridad baja y atajos temporales.
+- README completo en español con arquitectura, tecnologías, arranque, configuración, uso y límites.
+- Pruebas del atlas incluido y validación de coordenadas y enlaces externos.
+
+### Fixed
+
+- Eliminada la dependencia obligatoria de las teselas CARTO que muestran “API key required”.
+- La serie temporal incluye días sin eventos para no unir puntos separados como actividad continua.
+- Arranque limpio del frontend con instalación automática de dependencias si faltan.
+
+### Security
+
+- Coordenadas geográficas acotadas y enlaces de origen restringidos a HTTP(S) en ingesta y frontera del cliente.
+- Auditoría npm sin vulnerabilidades conocidas en dependencias de producción.
+
+### Known limitations
+
+- La auditoría visual interactiva en navegador sigue pendiente porque la sesión no dispone de navegador controlable; se verificaron compilación, pruebas y servicios HTTP.
 
 ## [0.1.0] - 2026-09-23
 

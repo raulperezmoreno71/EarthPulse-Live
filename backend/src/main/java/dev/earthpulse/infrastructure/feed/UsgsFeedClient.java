@@ -75,8 +75,7 @@ public class UsgsFeedClient implements FeedClient {
         boolean valid = !externalId.isBlank()
                 && !title.isBlank()
                 && occurredAtMillis > 0
-                && coordinates.isArray()
-                && coordinates.size() >= 2;
+                && FeedValidation.validCoordinates(coordinates);
 
         java.util.Optional<NormalizedEvent> parsed = java.util.Optional.empty();
         if (valid) {
@@ -85,7 +84,7 @@ public class UsgsFeedClient implements FeedClient {
             BigDecimal magnitude = properties.path("mag").isNumber() ? properties.path("mag").decimalValue() : null;
             Instant occurredAt = Instant.ofEpochMilli(occurredAtMillis);
             long updatedMillis = properties.path("updated").asLong(occurredAtMillis);
-            String sourceUrl = properties.path("url").asText(null);
+            String sourceUrl = FeedValidation.safeSourceUrl(properties.path("url").asText(null));
             String fingerprint = Fingerprint.sha256(String.join("|",
                     externalId,
                     title,

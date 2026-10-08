@@ -1,8 +1,8 @@
 # 🎨 Sistema de Diseño: EarthPulse Live
 
 > **Fase:** `/spec`
-> **Estado:** Propuesta pendiente de aprobación
-> **Última revisión:** 2026-09-23
+> **Estado:** Implementado; refinamiento visual aprobado
+> **Última revisión:** 2026-10-08
 
 ```yaml
 version: "1.0.0"
@@ -107,6 +107,8 @@ EarthPulse Live debe sentirse como una herramienta científica contemporánea y 
 - Marcadores con núcleo sólido, halo proporcional a severidad y estado de selección inequívoco.
 - Clusters con número legible y expansión animada moderada.
 - Atribución cartográfica siempre visible.
+- Atlas local de fondo oceánico profundo, continentes tonales y retícula discreta; ninguna marca de error o muro de API puede ocupar el mapa.
+- Conmutador Atlas/Calles y control para reencuadrar el mundo, visibles y accesibles.
 
 ### Métricas
 

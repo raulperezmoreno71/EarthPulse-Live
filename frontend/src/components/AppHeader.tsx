@@ -4,7 +4,7 @@
 // Licensed under the MIT License. See LICENSE for details.
 // Built with dbv-specs-ops · https://github.com/davidbuenov/dbv-specs-ops
 // =============================================================================
-import { Radio, Satellite } from 'lucide-react'
+import { Radio, Satellite, RefreshCw } from 'lucide-react'
 import type { DashboardData } from '../api/dashboard'
 import { relativeTime, sourceLabels } from '../utils/format'
 
@@ -22,14 +22,14 @@ export function AppHeader({ sources, generatedAt }: AppHeaderProps) {
           <span />
         </div>
         <div>
-          <p className="eyebrow">Global event intelligence</p>
+          <p className="eyebrow">OBSERVATORIO DE EVENTOS NATURALES</p>
           <h1>EarthPulse <em>Live</em></h1>
         </div>
       </div>
 
       <div className="source-strip" aria-label="Estado de las fuentes">
         {sources.map((source) => (
-          <div className={`source-pill status-${source.status.toLowerCase()}`} key={source.source}>
+          <div className={`source-pill status-${source.status.toLowerCase()}`} key={source.source} title={source.lastSuccess == null ? 'Esperando primera sincronización' : `Última lectura correcta: ${relativeTime(source.lastSuccess)}`}>
             {source.source === 'USGS' ? <Radio size={14} /> : <Satellite size={14} />}
             <span>{sourceLabels[source.source]}</span>
             <i aria-hidden="true" />
@@ -38,7 +38,7 @@ export function AppHeader({ sources, generatedAt }: AppHeaderProps) {
       </div>
 
       <div className="header-time">
-        <span>Actualización automática</span>
+        <span><RefreshCw size={12} /> PANEL ACTUALIZADO</span>
         <strong>{generatedAt === undefined ? 'Conectando…' : relativeTime(generatedAt)}</strong>
       </div>
     </header>

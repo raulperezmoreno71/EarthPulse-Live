@@ -1,8 +1,8 @@
 # 🏗 Arquitectura Técnica: EarthPulse Live
 
 > **Fase:** `/plan`
-> **Estado:** Propuesta pendiente de aprobación
-> **Última revisión:** 2026-09-23
+> **Estado:** Implementada; revisión cartográfica aprobada
+> **Última revisión:** 2026-10-08
 
 ## Stack tecnológico
 
@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Frontend | React 19.3 + TypeScript + Vite | Componentes modulares, tipado estricto y experiencia de desarrollo rápida |
 | Datos remotos | TanStack Query + Zod | Caché, reintentos controlados y validación de respuestas en la frontera |
-| Cartografía | Leaflet + React Leaflet | Solución madura, ligera y accesible para mapas y clustering |
+| Cartografía | Leaflet + Natural Earth local | Atlas vectorial sin clave ni dependencia cartográfica de red; clustering de eventos |
 | Visualización | Recharts | Gráficas responsive integradas con React |
 | Backend | Java 21 + Spring Boot 4.1 | Plataforma moderna, mantenible y preparada para producción |
 | Persistencia | PostgreSQL + Spring Data JPA | Consistencia, consultas temporales e índices adecuados al dominio |
@@ -117,6 +117,7 @@ No se expondrá un endpoint público de sincronización manual en el MVP para ev
 - Estado del servidor en TanStack Query; estado de filtros en reducer tipado y URL cuando sea útil.
 - Sin store global adicional en el MVP.
 - Componentes de mapa aislados del layout; paneles y gráficas no dependen directamente de Leaflet.
+- La base del mapa es un recurso TopoJSON empaquetado con el frontend y convertido a GeoJSON en el cliente; una capa estándar de OpenStreetMap solo se carga al pedir detalle de calles.
 - Respuestas HTTP validadas mediante Zod antes de entrar en la UI.
 
 ### Base de datos

@@ -17,12 +17,15 @@
 - **2026-09-23 — Perfil demo sin Docker:** PostgreSQL sigue siendo el objetivo de despliegue, pero el perfil predeterminado usa H2 persistente para que la demo funcione inmediatamente en equipos sin Docker. Flyway mantiene el mismo esquema en ambos perfiles.
 - **2026-09-23 — Dashboard atómico:** El MVP sirve eventos, métricas, timeline y salud de fuentes en una sola respuesta filtrada. Esto evita estados visuales incoherentes y reduce coordinación en el frontend.
 - **2026-09-23 — Separación de bundles visuales:** Leaflet y Recharts se cargan de forma diferida para que el shell inicial no dependa de los paquetes visuales más pesados.
+- **2026-10-08 — Atlas local como base permanente:** CARTO requiere ahora API key. Natural Earth, de dominio público, será la geografía empaquetada para que los eventos sigan visibles sin teselas ni pagos. OpenStreetMap estándar queda como detalle optativo activado por el usuario.
+- **2026-10-08 — Frontera geográfica y enlaces seguros:** Un único evento con coordenadas fuera de rango o URL de esquema no web puede contaminar el dashboard completo o sus enlaces. La ingesta valida posiciones y restringe enlaces a HTTP(S); Zod verifica de nuevo el contrato antes de dibujar.
 
 ## ⚠️ Lecciones aprendidas
 
 - Spring `RestClient` no deserializó directamente el `application/geo+json` de USGS con la configuración inicial. Leer el cuerpo como texto y normalizarlo con Jackson conserva validación explícita y compatibilidad con ambos proveedores.
 - El estado de una fuente debe separar “último intento” de “último éxito”. Un fallo temporal no debe borrar la frescura del último snapshot válido.
 - En Windows, un lanzador opaco en segundo plano dificulta diagnosticar Maven y npm. Ventanas minimizadas con títulos estables permiten observar logs y detener exactamente sus árboles con `stop.cmd`.
+- La comprobación estática de un atlas empaquetado no sustituye a la inspección visual del mapa en navegador. Si la sesión carece de superficie de browser, deben quedar explícitas la limitación y la revisión manual pendiente.
 
 ## 🗺️ Mapa de relaciones
 

@@ -4,10 +4,12 @@
 // Licensed under the MIT License. See LICENSE for details.
 // Built with dbv-specs-ops · https://github.com/davidbuenov/dbv-specs-ops
 // =============================================================================
-import { lazy, Suspense, useMemo, useState } from 'react'
+import { lazy, Suspense, useCallback, useMemo, useState } from 'react'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import type { DashboardFilters, EventCategory, NaturalEvent } from './api/dashboard'
 import { AppHeader } from './components/AppHeader'
+import { AppIntro } from './components/AppIntro'
+import { CategoryBreakdown } from './components/CategoryBreakdown'
 import { EventDetails } from './components/EventDetails'
 import { EventFeed } from './components/EventFeed'
 import { FilterPanel } from './components/FilterPanel'
@@ -49,15 +51,25 @@ function App() {
     () => events.find((event) => event.id === selectedId) ?? null,
     [events, selectedId],
   )
+  const visibleSelectedId = selectedEvent?.id ?? null
   const categoryCounts = useMemo(() => {
     const counts: Partial<Record<EventCategory, number>> = {}
     for (const event of events) counts[event.category] = (counts[event.category] ?? 0) + 1
     return counts
   }, [events])
+  const degradedSources = dashboard.data?.sources.filter((source) => source.status === 'FAILED') ?? []
+
+  const changeFilters = (nextFilters: DashboardFilters) => {
+    setSelectedId(null)
+    setFilters(nextFilters)
+  }
+  const closeDetails = useCallback(() => setSelectedId(null), [])
 
   return (
     <div className="app-shell">
       <AppHeader sources={dashboard.data?.sources ?? pendingSources} generatedAt={dashboard.data?.generatedAt} />
+
+      <AppIntro latestEvent={events[0]} isFetching={dashboard.isFetching} onSelect={setSelectedId} />
 
       {dashboard.isError ? (
         <div className="system-banner error" role="alert">
@@ -67,17 +79,27 @@ function App() {
         </div>
       ) : null}
 
-      <MetricGrid summary={dashboard.data?.summary} eventCount={events.length} isLoading={dashboard.isLoading} />
+      {degradedSources.length > 0 ? (
+        <div className="system-banner warning" role="status">
+          <AlertTriangle size={17} />
+          <span>{degradedSources.map((source) => source.source === 'USGS' ? 'USGS' : 'NASA EONET').join(' y ')} no ha podido actualizarse. Se muestran los últimos datos disponibles.</span>
+        </div>
+      ) : null}
+
+      <MetricGrid summary={dashboard.data?.summary} sources={dashboard.data?.sources ?? pendingSources} isLoading={dashboard.isLoading} />
 
       <main className="dashboard-grid">
-        <FilterPanel filters={filters} counts={categoryCounts} onChange={setFilters} />
+        <FilterPanel filters={filters} counts={categoryCounts} onChange={changeFilters} />
         <div className="visual-column">
           <Suspense fallback={<div className="map-panel lazy-placeholder" />}>
-            <EventMap events={events} selectedId={selectedId} onSelect={setSelectedId} />
+            <EventMap events={events} selectedId={visibleSelectedId} onSelect={setSelectedId} />
           </Suspense>
-          <Suspense fallback={<div className="chart-panel lazy-placeholder" />}>
-            <ActivityChart timeline={dashboard.data?.timeline ?? []} />
-          </Suspense>
+          <div className="analytics-row">
+            <Suspense fallback={<div className="chart-panel lazy-placeholder" />}>
+              <ActivityChart timeline={dashboard.data?.timeline ?? []} />
+            </Suspense>
+            <CategoryBreakdown summary={dashboard.data?.summary} />
+          </div>
           {dashboard.isLoading ? (
             <div className="map-loading" role="status">
               <span className="loading-radar" aria-hidden="true" />
@@ -86,14 +108,14 @@ function App() {
             </div>
           ) : null}
         </div>
-        <EventFeed events={events} selectedId={selectedId} onSelect={setSelectedId} />
+        <EventFeed events={events} selectedId={visibleSelectedId} onSelect={setSelectedId} isLoading={dashboard.isLoading} />
       </main>
 
-      <EventDetails event={selectedEvent} onClose={() => setSelectedId(null)} />
+      <EventDetails event={selectedEvent} onClose={closeDetails} />
 
       <footer>
         <span><i /> Datos públicos · Visualización informativa</span>
-        <span>USGS · NASA EONET · OpenStreetMap</span>
+        <span>USGS · NASA EONET · Natural Earth</span>
       </footer>
     </div>
   )
